@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="IGraphicalWindow.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="test.cpp" />
+    <ClCompile Include="TestWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CommonTypes.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraphicalWindow.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="TestWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{d5184b62-8ad6-4229-923b-bdf8297018f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{3b2deec9-7ce7-4c56-a24a-2dd7f9cf7029}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
