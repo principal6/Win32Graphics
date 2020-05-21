@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "float4x4.h"
+#include "Float4x4.h"
 
 
 namespace fs
@@ -23,7 +23,7 @@ namespace fs
 		__noop;
 	}
 
-	Float4x4::Float4x4(const float4& row0, const float4& row1, const float4& row2, const float4& row3)
+	Float4x4::Float4x4(const Float4& row0, const Float4& row1, const Float4& row2, const Float4& row3)
 		: _row{ row0, row1, row2, row3 }
 	{
 		__noop;
@@ -111,7 +111,7 @@ namespace fs
 		_row[3].set(m30, m31, m32, m33);
 	}
 
-	void Float4x4::set(const float4& row0, const float4& row1, const float4& row2, const float4& row3)
+	void Float4x4::set(const Float4& row0, const Float4& row1, const Float4& row2, const Float4& row3)
 	{
 		_row[0] = row0;
 		_row[1] = row1;
@@ -135,19 +135,19 @@ namespace fs
 		_row[3].set(0, 0, 0, 1);
 	}
 
-	float4 Float4x4::mul(const float4& v) const noexcept
+	Float4 Float4x4::mul(const Float4& v) const noexcept
 	{
-		return float4(
-			float4::dot(_row[0], v), // x
-			float4::dot(_row[1], v), // y
-			float4::dot(_row[2], v), // z
-			float4::dot(_row[3], v)  // w
+		return Float4(
+			Float4::dot(_row[0], v), // x'
+			Float4::dot(_row[1], v), // y'
+			Float4::dot(_row[2], v), // z'
+			Float4::dot(_row[3], v)  // w'
 		);
 	}
 
 	Float4x4 Float4x4::mul(const Float4x4& m) const noexcept
 	{
-		float4 col[4]{
+		Float4 col[4]{
 			{ m._row[0].getX(), m._row[1].getX(), m._row[2].getX(), m._row[3].getX() },
 			{ m._row[0].getY(), m._row[1].getY(), m._row[2].getY(), m._row[3].getY() },
 			{ m._row[0].getZ(), m._row[1].getZ(), m._row[2].getZ(), m._row[3].getZ() },
@@ -155,16 +155,26 @@ namespace fs
 		};
 
 		return Float4x4(
-			float4::dot(_row[0], col[0]), float4::dot(_row[0], col[1]), float4::dot(_row[0], col[2]), float4::dot(_row[0], col[3]),
-			float4::dot(_row[1], col[0]), float4::dot(_row[1], col[1]), float4::dot(_row[1], col[2]), float4::dot(_row[1], col[3]),
-			float4::dot(_row[2], col[0]), float4::dot(_row[2], col[1]), float4::dot(_row[2], col[2]), float4::dot(_row[2], col[3]),
-			float4::dot(_row[3], col[0]), float4::dot(_row[3], col[1]), float4::dot(_row[3], col[2]), float4::dot(_row[3], col[3])
+			Float4::dot(_row[0], col[0]), Float4::dot(_row[0], col[1]), Float4::dot(_row[0], col[2]), Float4::dot(_row[0], col[3]),
+			Float4::dot(_row[1], col[0]), Float4::dot(_row[1], col[1]), Float4::dot(_row[1], col[2]), Float4::dot(_row[1], col[3]),
+			Float4::dot(_row[2], col[0]), Float4::dot(_row[2], col[1]), Float4::dot(_row[2], col[2]), Float4::dot(_row[2], col[3]),
+			Float4::dot(_row[3], col[0]), Float4::dot(_row[3], col[1]), Float4::dot(_row[3], col[2]), Float4::dot(_row[3], col[3])
+		);
+	}
+
+	Float4 Float4x4::mul(const Float4x4& m, const Float4& v) noexcept
+	{
+		return Float4(
+			Float4::dot(m._row[0], v), // x'
+			Float4::dot(m._row[1], v), // y'
+			Float4::dot(m._row[2], v), // z'
+			Float4::dot(m._row[3], v)  // w'
 		);
 	}
 
 	Float4x4 Float4x4::mul(const Float4x4& l, const Float4x4& r) noexcept
 	{
-		float4 rCol[4]{
+		Float4 rCol[4]{
 			{ r._row[0].getX(), r._row[1].getX(), r._row[2].getX(), r._row[3].getX() },
 			{ r._row[0].getY(), r._row[1].getY(), r._row[2].getY(), r._row[3].getY() },
 			{ r._row[0].getZ(), r._row[1].getZ(), r._row[2].getZ(), r._row[3].getZ() },
@@ -172,11 +182,10 @@ namespace fs
 		};
 
 		return Float4x4(
-			float4::dot(l._row[0], rCol[0]), float4::dot(l._row[0], rCol[1]), float4::dot(l._row[0], rCol[2]), float4::dot(l._row[0], rCol[3]),
-			float4::dot(l._row[1], rCol[0]), float4::dot(l._row[1], rCol[1]), float4::dot(l._row[1], rCol[2]), float4::dot(l._row[1], rCol[3]),
-			float4::dot(l._row[2], rCol[0]), float4::dot(l._row[2], rCol[1]), float4::dot(l._row[2], rCol[2]), float4::dot(l._row[2], rCol[3]),
-			float4::dot(l._row[3], rCol[0]), float4::dot(l._row[3], rCol[1]), float4::dot(l._row[3], rCol[2]), float4::dot(l._row[3], rCol[3])
+			Float4::dot(l._row[0], rCol[0]), Float4::dot(l._row[0], rCol[1]), Float4::dot(l._row[0], rCol[2]), Float4::dot(l._row[0], rCol[3]),
+			Float4::dot(l._row[1], rCol[0]), Float4::dot(l._row[1], rCol[1]), Float4::dot(l._row[1], rCol[2]), Float4::dot(l._row[1], rCol[3]),
+			Float4::dot(l._row[2], rCol[0]), Float4::dot(l._row[2], rCol[1]), Float4::dot(l._row[2], rCol[2]), Float4::dot(l._row[2], rCol[3]),
+			Float4::dot(l._row[3], rCol[0]), Float4::dot(l._row[3], rCol[1]), Float4::dot(l._row[3], rCol[2]), Float4::dot(l._row[3], rCol[3])
 		);
 	}
-
 }

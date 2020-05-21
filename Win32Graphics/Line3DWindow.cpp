@@ -15,8 +15,6 @@ namespace fs
 	void Line3DWindow::set(const std::wstring& title, HINSTANCE hInstance, WNDPROC windowProc)
 	{
 		__super::setInternal(title, hInstance, windowProc);
-
-
 	}
 
 	void Line3DWindow::setProjectionMatrix(float Fov, float nearZ, float farZ, float ratio) noexcept

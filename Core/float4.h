@@ -12,12 +12,15 @@
 
 namespace fs
 {
+	// internal data union for Float4
 	union UM128Data
 	{
 		__m128	m;
 		struct { float x; float y; float z; float w; };
 	};
 
+	// SSE
+	// private fields
 	class Float4
 	{
 	public:
@@ -83,35 +86,13 @@ namespace fs
 
 	// static functions
 	public:
-		static float				dot(const Float4& a, const Float4& b) noexcept
-		{
-			UM128Data result{ _mm_mul_ps(a._data.m, b._data.m) };
-			return (result.x + result.y + result.z + result.w);
-		}
-
-		static Float4				cross(const Float4& a, const Float4& b) noexcept
-		{
-			UM128Data result
-			{
-				a._data.y * b._data.z - a._data.z * b._data.y,
-				a._data.z * b._data.x - a._data.x * b._data.z,
-				a._data.x * b._data.y - a._data.y * b._data.x,
-				0,
-			};
-			return result.m;
-		}
-
-		static float				length(const Float4& a) noexcept
-		{
-			return sqrtf( Float4::dot(a, a) );
-		}
-
-		static Float4				normalize(const Float4& a) noexcept
-		{
-			float length{ Float4::length(a) };
-			return (a / length);
-		}
+		static float				dot(const Float4& a, const Float4& b) noexcept;
+		static Float4				cross(const Float4& a, const Float4& b) noexcept;
+		static float				length(const Float4& a) noexcept;
+		static Float4				normalize(const Float4& a) noexcept;
 	};
+
+	// alias
 	using float4				= Float4;
 }
 

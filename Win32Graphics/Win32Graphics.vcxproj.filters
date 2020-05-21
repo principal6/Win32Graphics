@@ -2,9 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="test.cpp" />
-    <ClCompile Include="..\Core\float4.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\Core\IWin32GdiWindow.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -15,15 +12,15 @@
       <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="Line3DWindow.cpp" />
-    <ClCompile Include="..\Core\float4x4.cpp">
+    <ClCompile Include="..\Core\Float4.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\Float4x4.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Core\_CommonTypes.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Core\float4.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\Core\IWin32GdiWindow.h">
@@ -39,7 +36,13 @@
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Line3DWindow.h" />
-    <ClInclude Include="..\Core\float4x4.h">
+    <ClInclude Include="..\Core\Float2.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Float4.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\Float4x4.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

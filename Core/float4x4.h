@@ -6,12 +6,12 @@
 // === HEADER BEGINS ===
 
 
-#include <Core/float4.h>
+#include <Core/Float4.h>
 
 
 namespace fs
 {
-	// right-handed matrix
+	// right-handed 4x4 matrix
 	class Float4x4
 	{
 	public:
@@ -20,7 +20,7 @@ namespace fs
 										float m10, float m11, float m12, float m13,
 										float m20, float m21, float m22, float m23,
 										float m30, float m31, float m32, float m33);
-								Float4x4(const float4& row0, const float4& row1, const float4& row2, const float4& row3);
+								Float4x4(const Float4& row0, const Float4& row1, const Float4& row2, const Float4& row3);
 								Float4x4(const Float4x4& b);
 								Float4x4(Float4x4&& b) noexcept;
 								~Float4x4();
@@ -48,22 +48,25 @@ namespace fs
 									float m10, float m11, float m12, float m13,
 									float m20, float m21, float m22, float m23,
 									float m30, float m31, float m32, float m33);
-		void					set(const float4& row0, const float4& row1, const float4& row2, const float4& row3);
+		void					set(const Float4& row0, const Float4& row1, const Float4& row2, const Float4& row3);
 		void					setZero();
 		void					setIdentity();
 
 	public:
-		float4					mul(const float4& v) const noexcept;
+		Float4					mul(const Float4& v) const noexcept;
 		Float4x4				mul(const Float4x4& m) const noexcept;
 
 	private:
-		float4					_row[4];
+		Float4					_row[4];
 
 
 	// static functions
 	public:
+		static Float4			mul(const Float4x4& m, const Float4& v) noexcept;
 		static Float4x4			mul(const Float4x4& l, const Float4x4& r) noexcept;
 	};
+
+	// alias
 	using float4x4 = Float4x4;
 }
 

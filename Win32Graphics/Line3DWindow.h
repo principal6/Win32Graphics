@@ -7,8 +7,8 @@
 
 
 #include <Core/IWin32GdiWindow.h>
-#include <Core/float4.h>
-#include <Core/float4x4.h>
+#include <Core/Float4.h>
+#include <Core/Float4x4.h>
 
 
 namespace fs
@@ -38,6 +38,8 @@ namespace fs
 		float4x4			_translationMatrix;
 		float4x4			_rotationMatrix;
 		float4x4			_scalingMatrix;
+
+	private:
 		std::vector<float4>	_vVertices;
 		std::vector<Color>	_vLineColors;
 	};

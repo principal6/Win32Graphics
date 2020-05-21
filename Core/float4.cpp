@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "float4.h"
+#include "Float4.h"
 
 
 namespace fs
@@ -166,5 +166,34 @@ namespace fs
 	float Float4::getW() const noexcept
 	{
 		return _data.w;
+	}
+
+	float Float4::dot(const Float4& a, const Float4& b) noexcept
+	{
+		UM128Data result{ _mm_mul_ps(a._data.m, b._data.m) };
+		return (result.x + result.y + result.z + result.w);
+	}
+
+	Float4 Float4::cross(const Float4& a, const Float4& b) noexcept
+	{
+		UM128Data result
+		{
+			a._data.y * b._data.z - a._data.z * b._data.y,
+			a._data.z * b._data.x - a._data.x * b._data.z,
+			a._data.x * b._data.y - a._data.y * b._data.x,
+			0,
+		};
+		return result.m;
+	}
+
+	float Float4::length(const Float4& a) noexcept
+	{
+		return sqrtf(Float4::dot(a, a));
+	}
+
+	Float4 Float4::normalize(const Float4& a) noexcept
+	{
+		float length{ Float4::length(a) };
+		return (a / length);
 	}
 }

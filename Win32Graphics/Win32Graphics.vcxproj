@@ -142,8 +142,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Core\float4.cpp" />
-    <ClCompile Include="..\Core\float4x4.cpp" />
+    <ClCompile Include="..\Core\Float4.cpp" />
+    <ClCompile Include="..\Core\Float4x4.cpp" />
     <ClCompile Include="..\Core\IWin32GdiWindow.cpp" />
     <ClCompile Include="..\Core\pch.cpp" />
     <ClCompile Include="..\Utilities\Timer.cpp" />
@@ -151,8 +151,9 @@
     <ClCompile Include="Line3DWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Core\float4.h" />
-    <ClInclude Include="..\Core\float4x4.h" />
+    <ClInclude Include="..\Core\Float2.h" />
+    <ClInclude Include="..\Core\Float4.h" />
+    <ClInclude Include="..\Core\Float4x4.h" />
     <ClInclude Include="..\Core\IWin32GdiWindow.h" />
     <ClInclude Include="..\Core\pch.h" />
     <ClInclude Include="..\Core\_CommonTypes.h" />
