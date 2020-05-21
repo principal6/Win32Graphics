@@ -6,7 +6,7 @@ namespace fs
 {
 	Float4::Float4()
 	{
-		_data.m = _mm_setzero_ps();
+		_data = _mm_setzero_ps();
 	}
 
 	Float4::Float4(float x, float y, float z, float w)
@@ -16,18 +16,18 @@ namespace fs
 
 	Float4::Float4(const __m128& m)
 	{
-		_data.m = m;
+		_data = m;
 	}
 
 	Float4::Float4(const Float4& b)
 	{
-		_data.m = b._data.m;
+		_data = b._data;
 	}
 
 	Float4::Float4(Float4&& b) noexcept
 	{
 		if (this == &b) return;
-		_data.m = std::move(b._data.m);
+		_data = std::move(b._data);
 	}
 
 	Float4::~Float4()
@@ -36,154 +36,159 @@ namespace fs
 
 	Float4& Float4::operator=(const Float4& b)
 	{
-		_data.m = b._data.m;
+		_data = b._data;
 		return *this;
 	}
 
 	Float4& Float4::operator=(Float4&& b) noexcept
 	{
 		if (this == &b) return *this;
-		_data.m = std::move(b._data.m);
+		_data = std::move(b._data);
 		return *this;
 	}
 
 	Float4& Float4::operator+=(const Float4& b)
 	{
-		_data.m = _mm_add_ps(_data.m, b._data.m);
+		_data = _mm_add_ps(_data, b._data);
 		return *this;
 	}
 
 	Float4& Float4::operator-=(const Float4& b)
 	{
-		_data.m = _mm_sub_ps(_data.m, b._data.m);
+		_data = _mm_sub_ps(_data, b._data);
 		return *this;
 	}
 
 	Float4& Float4::operator*=(const Float4& b)
 	{
-		_data.m = _mm_mul_ps(_data.m, b._data.m);
+		_data = _mm_mul_ps(_data, b._data);
 		return *this;
 	}
 
 	Float4& Float4::operator/=(const Float4& b)
 	{
-		_data.m = _mm_div_ps(_data.m, b._data.m);
+		_data = _mm_div_ps(_data, b._data);
 		return *this;
 	}
 
 	Float4& Float4::operator*=(float s)
 	{
-		_data.m = _mm_mul_ps(_data.m, _mm_set_ps(s, s, s, s));
+		_data = _mm_mul_ps(_data, _mm_set_ps(s, s, s, s));
 		return *this;
 	}
 
 	Float4& Float4::operator/=(float s)
 	{
-		_data.m = _mm_div_ps(_data.m, _mm_set_ps(s, s, s, s));
+		_data = _mm_div_ps(_data, _mm_set_ps(s, s, s, s));
 		return *this;
 	}
 
 	Float4 Float4::operator+(const Float4& b) const
 	{
-		return _mm_add_ps(_data.m, b._data.m);
+		return _mm_add_ps(_data, b._data);
 	}
 
 	Float4 Float4::operator-(const Float4& b) const
 	{
-		return _mm_sub_ps(_data.m, b._data.m);
+		return _mm_sub_ps(_data, b._data);
 	}
 
 	Float4 Float4::operator*(const Float4& b) const
 	{
-		return _mm_mul_ps(_data.m, b._data.m);
+		return _mm_mul_ps(_data, b._data);
 	}
 
 	Float4 Float4::operator/(const Float4& b) const
 	{
-		return _mm_div_ps(_data.m, b._data.m);
+		return _mm_div_ps(_data, b._data);
 	}
 
 	Float4 Float4::operator*(float s) const
 	{
-		return _mm_mul_ps(_data.m, _mm_set_ps(s, s, s, s));
+		return _mm_mul_ps(_data, _mm_set_ps(s, s, s, s));
 	}
 
 	Float4 Float4::operator/(float s) const
 	{
-		return _mm_div_ps(_data.m, _mm_set_ps(s, s, s, s));
+		return _mm_div_ps(_data, _mm_set_ps(s, s, s, s));
 	}
 
 	Float4 Float4::operator==(const Float4& b) const noexcept
 	{
-		return _mm_cmpeq_ps(_data.m, b._data.m);
+		return _mm_cmpeq_ps(_data, b._data);
 	}
 
 	Float4 Float4::operator!=(const Float4& b) const noexcept
 	{
-		return _mm_cmpneq_ps(_data.m, b._data.m);
+		return _mm_cmpneq_ps(_data, b._data);
 	}
 
 	void Float4::set(float x, float y, float z, float w)
 	{
-		_data.m = _mm_set_ps(w, z, y, x);
+		_data = _mm_set_ps(w, z, y, x);
 	}
 
 	void Float4::setX(float s) noexcept
 	{
-		_data.x = s;
+		_data.m128_f32[0] = s;
 	}
 
 	void Float4::setY(float s) noexcept
 	{
-		_data.y = s;
+		_data.m128_f32[1] = s;
 	}
 
 	void Float4::setZ(float s) noexcept
 	{
-		_data.z = s;
+		_data.m128_f32[2] = s;
 	}
 
 	void Float4::setW(float s) noexcept
 	{
-		_data.w = s;
+		_data.m128_f32[3] = s;
+	}
+
+	float Float4::get(uint32 index) const noexcept
+	{
+		return _data.m128_f32[index];
 	}
 
 	float Float4::getX() const noexcept
 	{
-		return _data.x;
+		return _data.m128_f32[0];
 	}
 
 	float Float4::getY() const noexcept
 	{
-		return _data.y;
+		return _data.m128_f32[1];
 	}
 
 	float Float4::getZ() const noexcept
 	{
-		return _data.z;
+		return _data.m128_f32[2];
 	}
 
 	float Float4::getW() const noexcept
 	{
-		return _data.w;
+		return _data.m128_f32[3];
 	}
 
 	float Float4::dot(const Float4& a, const Float4& b) noexcept
 	{
-		UM128Data result{ _mm_mul_ps(a._data.m, b._data.m) };
-		return (result.x + result.y + result.z + result.w);
+		__m128 result{ _mm_mul_ps(a._data, b._data) };
+		return (result.m128_f32[0] + result.m128_f32[1] + result.m128_f32[2] + result.m128_f32[3]);
 	}
 
 	Float4 Float4::cross(const Float4& a, const Float4& b) noexcept
 	{
-		UM128Data result
+		__m128 result
 		{
-			a._data.y * b._data.z - a._data.z * b._data.y,
-			a._data.z * b._data.x - a._data.x * b._data.z,
-			a._data.x * b._data.y - a._data.y * b._data.x,
+			a.getY() * b.getZ() - a.getZ() * b.getY(),
+			a.getZ() * b.getX() - a.getX() * b.getZ(),
+			a.getX() * b.getY() - a.getY() * b.getX(),
 			0,
 		};
-		return result.m;
+		return result;
 	}
 
 	float Float4::length(const Float4& a) noexcept

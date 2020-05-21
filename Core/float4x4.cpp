@@ -135,6 +135,73 @@ namespace fs
 		_row[3].set(0, 0, 0, 1);
 	}
 
+	Float3x3 Float4x4::minor(uint32 rowIndex, uint32 columnIndex) const noexcept
+	{
+		Float3x3 result;
+
+		uint32 smallY{};
+		for (uint32 y = 0; y < 4; ++y)
+		{
+			if (y == rowIndex) continue;
+
+			uint32 smallX{};
+			for (uint32 x = 0; x < 4; ++x)
+			{
+				if (x == columnIndex) continue;
+
+				result.m[smallY][smallX] = _row[y].get(x);
+
+				++smallX;
+			}
+
+			++smallY;
+		}
+
+		return result;
+	}
+
+	float Float4x4::determinant() const noexcept
+	{
+		float a = _row[0].get(0);
+		float b = _row[0].get(1);
+		float c = _row[0].get(2);
+		float d = _row[0].get(3);
+
+		return a * minor(0, 0).determinant() - b * minor(0, 1).determinant() + c * minor(0, 2).determinant() - d * minor(0, 3).determinant();
+	}
+
+	Float4x4 Float4x4::transpose() const noexcept
+	{
+		return Float4x4
+		(
+			_row[0].get(0), _row[1].get(0), _row[2].get(0), _row[3].get(0),
+			_row[0].get(1), _row[1].get(1), _row[2].get(1), _row[3].get(1),
+			_row[0].get(2), _row[1].get(2), _row[2].get(2), _row[3].get(2),
+			_row[0].get(3), _row[1].get(3), _row[2].get(3), _row[3].get(3)
+		);
+	}
+
+	Float4x4 Float4x4::cofactor() const noexcept
+	{
+		return Float4x4
+		(
+			+minor(0, 0).determinant(), -minor(0, 1).determinant(), +minor(0, 2).determinant(), -minor(0, 3).determinant(),
+			-minor(1, 0).determinant(), +minor(1, 1).determinant(), -minor(1, 2).determinant(), +minor(1, 3).determinant(),
+			+minor(2, 0).determinant(), -minor(2, 1).determinant(), +minor(2, 2).determinant(), -minor(2, 3).determinant(),
+			-minor(3, 0).determinant(), +minor(3, 1).determinant(), -minor(3, 2).determinant(), +minor(3, 3).determinant()
+		);
+	}
+
+	Float4x4 Float4x4::adjugate() const noexcept
+	{
+		return cofactor().transpose();
+	}
+
+	Float4x4 Float4x4::inverse() const noexcept
+	{
+		return adjugate() / determinant();
+	}
+
 	Float4 Float4x4::mul(const Float4& v) const noexcept
 	{
 		return Float4(

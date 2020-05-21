@@ -12,13 +12,6 @@
 
 namespace fs
 {
-	// internal data union for Float4
-	union UM128Data
-	{
-		__m128	m;
-		struct { float x; float y; float z; float w; };
-	};
-
 	// SSE
 	// private fields
 	class Float4
@@ -75,21 +68,22 @@ namespace fs
 		void					setZ(float s) noexcept;
 		void					setW(float s) noexcept;
 
+		float					get(uint32 index) const noexcept;
 		float					getX() const noexcept;
 		float					getY() const noexcept;
 		float					getZ() const noexcept;
 		float					getW() const noexcept;
 
 	private:
-		UM128Data				_data;
+		__m128					_data;
 
 
 	// static functions
 	public:
-		static float				dot(const Float4& a, const Float4& b) noexcept;
-		static Float4				cross(const Float4& a, const Float4& b) noexcept;
-		static float				length(const Float4& a) noexcept;
-		static Float4				normalize(const Float4& a) noexcept;
+		static float			dot(const Float4& a, const Float4& b) noexcept;
+		static Float4			cross(const Float4& a, const Float4& b) noexcept;
+		static float			length(const Float4& a) noexcept;
+		static Float4			normalize(const Float4& a) noexcept;
 	};
 
 	// alias
