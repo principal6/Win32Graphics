@@ -1,10 +1,15 @@
 ﻿#pragma once
 
-#include <Windows.h>
-#include <string>
-#include <vector>
 
-#include "Timer.h"
+#ifndef FS_I_WIN32_GDI_WINDOW_H
+#define FS_I_WIN32_GDI_WINDOW_H
+// === HEADER BEGINS ===
+
+
+#include <Core/_CommonTypes.h>
+#include <Utilities/Timer.h>
+
+#include <string>
 
 
 namespace fs
@@ -76,9 +81,9 @@ namespace fs
 		// clamped addition
 		constexpr void add(const Color& o)
 		{
-			r = min(r + o.r, 255);
-			g = min(g + o.g, 255);
-			b = min(b + o.b, 255);
+			r = min(r + o.r, 1.0f);
+			g = min(g + o.g, 1.0f);
+			b = min(b + o.b, 1.0f);
 		}
 		// clamped substraction
 		constexpr void sub(const Color& o)
@@ -91,7 +96,7 @@ namespace fs
 		// clamped addition
 		static constexpr Color add(const Color& a, const Color& o)
 		{
-			return Color(min(a.r + o.r, 255), min(a.g + o.g, 255), min(a.b + o.b, 255));
+			return Color(min(a.r + o.r, 1.0f), min(a.g + o.g, 1.0f), min(a.b + o.b, 1.0f));
 		}
 		// clamped substraction
 		static constexpr Color sub(const Color& a, const Color& o)
@@ -155,11 +160,11 @@ namespace fs
 	};
 
 
-	class IGraphicalWindow
+	class IWin32GdiWindow
 	{
 	public:
-		IGraphicalWindow(float width, float height);
-		virtual ~IGraphicalWindow();
+		IWin32GdiWindow(float width, float height);
+		virtual ~IWin32GdiWindow();
 
 	public:
 		// @주의: override한 set() 안에서 반드시 setInternal()를 가장 먼저 호출하세요.
@@ -174,7 +179,7 @@ namespace fs
 
 	public:
 		void addFont(const std::wstring& fontName, int32 size, bool isKorean);
-		void useFont(uint32 fontIndex);
+		void useFont(uint32 fontIndex) const noexcept;
 
 		// image의 index를 리턴함.
 		uint32 createImageFromFile(const std::wstring& fileName);
@@ -186,25 +191,25 @@ namespace fs
 		virtual bool update();
 
 	public:
-		void beginRendering(const Color& clearColor);
-		void endRendering();
+		void beginRendering(const Color& clearColor) const noexcept;
+		void endRendering() const noexcept;
 
 	public:
 		// 이 함수를 직접 호출하기보단, createBlankImage()와 drawRectangleToImage()를 이용하면 훨씬 성능에 좋습니다.
-		void drawRectangleToScreen(const Position2& position, const Size2& size, const Color& color, uint8 alpha = 255);
+		void drawRectangleToScreen(const Position2& position, const Size2& size, const Color& color, uint8 alpha = 255) const noexcept;
 
 		// createBlankImage(), drawImage...()와 함께 사용하면 drawRectangleToScreen()보다 더 좋은 성능을 낼 수 있는 함수입니다.
 		void drawRectangleToImage(uint32 imageIndex, const Position2& position, const Size2& size, const Color& color, uint8 alpha = 255);
 
-		void drawImageToScreen(uint32 imageIndex, const Position2& position);
-		void drawImageAlphaToScreen(uint32 imageIndex, const Position2& position);
-		void drawImageAlphaToScreen(uint32 imageIndex, const Position2& position, uint8 alpha);
-		void drawImagePrecomputedAlphaToScreen(uint32 imageIndex, const Position2& position);
-		void drawTextToScreen(const Position2& position, const std::wstring& content, const Color& color);
+		void drawImageToScreen(uint32 imageIndex, const Position2& position) const noexcept;
+		void drawImageAlphaToScreen(uint32 imageIndex, const Position2& position) const noexcept;
+		void drawImageAlphaToScreen(uint32 imageIndex, const Position2& position, uint8 alpha) const noexcept;
+		void drawImagePrecomputedAlphaToScreen(uint32 imageIndex, const Position2& position) const noexcept;
+		void drawTextToScreen(const Position2& position, const std::wstring& content, const Color& color) const noexcept;
 		void drawTextToScreen(const Position2& position, const Size2& area, const std::wstring& content, const Color& color,
-			EHorzAlign eHorzAlign, EVertAlign eVertAlign);
-		void drawLineToScreen(const Position2& positionA, const Position2& positionB, const Color& color);
-		void drawLineToScreenNormalized(const Position2& positionA, const Position2& positionB, const Color& color);
+			EHorzAlign eHorzAlign, EVertAlign eVertAlign) const noexcept;
+		void drawLineToScreen(const Position2& positionA, const Position2& positionB, const Color& color) const noexcept;
+		void drawLineToScreenNormalized(const Position2& positionA, const Position2& positionB, const Color& color) const noexcept;
 
 	public:
 		uint32 getFps() const noexcept;
@@ -213,6 +218,7 @@ namespace fs
 		float getHeight() const noexcept;
 		bool tickInput() const noexcept;
 		bool isKeyPressed(int keyCode) const noexcept;
+		bool isKeyDown(int keyCode) const noexcept;
 		bool tickSecond() const noexcept;
 
 	private:
@@ -240,7 +246,7 @@ namespace fs
 
 	private:
 		Timer					_secondTimer{};
-		uint32					_frameCount{};
+		mutable uint32			_frameCount{};
 		uint32					_fps{};
 		std::wstring			_fpsWstring{};
 		mutable bool			_bSecondTick{ false };
@@ -250,3 +256,7 @@ namespace fs
 		mutable bool			_bInputTick{ false };
 	};
 }
+
+
+// === HEADER ENDS ===
+#endif // !FS_IWIN32_GDI_WINDOW_H

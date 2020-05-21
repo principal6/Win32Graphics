@@ -1,6 +1,12 @@
 ﻿#pragma once
 
-#include "CommonTypes.h"
+
+#ifndef FS_TIMER_H
+#define FS_TIMER_H
+// === HEADER BEGINS ===
+
+
+#include <Core/_CommonTypes.h>
 
 
 namespace fs
@@ -77,3 +83,7 @@ namespace fs
 		bool	_isTicking{ false };
 	};
 }
+
+
+// === HEADER ENDS ===
+#endif // !FS_TIMER_H

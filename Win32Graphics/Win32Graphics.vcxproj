@@ -87,6 +87,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -99,6 +100,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -113,6 +115,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -129,6 +132,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,17 +142,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="IGraphicalWindow.cpp" />
+    <ClCompile Include="..\Core\float4.cpp" />
+    <ClCompile Include="..\Core\float4x4.cpp" />
+    <ClCompile Include="..\Core\IWin32GdiWindow.cpp" />
+    <ClCompile Include="..\Core\pch.cpp" />
+    <ClCompile Include="..\Utilities\Timer.cpp" />
     <ClCompile Include="test.cpp" />
-    <ClCompile Include="TestWindow.cpp" />
-    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Line3DWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommonTypes.h" />
-    <ClInclude Include="IGraphicalWindow.h" />
-    <ClInclude Include="stb_image.h" />
-    <ClInclude Include="TestWindow.h" />
-    <ClInclude Include="Timer.h" />
+    <ClInclude Include="..\Core\float4.h" />
+    <ClInclude Include="..\Core\float4x4.h" />
+    <ClInclude Include="..\Core\IWin32GdiWindow.h" />
+    <ClInclude Include="..\Core\pch.h" />
+    <ClInclude Include="..\Core\_CommonTypes.h" />
+    <ClInclude Include="..\Utilities\stb_image.h" />
+    <ClInclude Include="..\Utilities\Timer.h" />
+    <ClInclude Include="Line3DWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

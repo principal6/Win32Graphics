@@ -1,7 +1,7 @@
-﻿#include "IGraphicalWindow.h"
+﻿#include "IWin32GdiWindow.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <Utilities/stb_image.h>
 
 #include <cassert>
 #include <wingdi.h>
@@ -11,17 +11,17 @@
 
 namespace fs
 {
-	IGraphicalWindow::IGraphicalWindow(float width, float height) : kWidth{ width }, kHeight{ height }
+	IWin32GdiWindow::IWin32GdiWindow(float width, float height) : kWidth{ width }, kHeight{ height }
 	{
 		__noop;
 	}
 
-	IGraphicalWindow::~IGraphicalWindow()
+	IWin32GdiWindow::~IWin32GdiWindow()
 	{
 		uninitialize();
 	}
 
-	void IGraphicalWindow::setInternal(const std::wstring& title, HINSTANCE hInstance, WNDPROC windowProc)
+	void IWin32GdiWindow::setInternal(const std::wstring& title, HINSTANCE hInstance, WNDPROC windowProc)
 	{
 		// 윈도우 클래스를 등록한다
 		WNDCLASSEXW windowClass{};
@@ -60,7 +60,7 @@ namespace fs
 		initialize();
 	}
 
-	LRESULT IGraphicalWindow::processWindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+	LRESULT IWin32GdiWindow::processWindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (Msg)
 		{
@@ -73,18 +73,18 @@ namespace fs
 		return DefWindowProc(hWnd, Msg, wParam, lParam);
 	}
 
-	void IGraphicalWindow::addFont(const std::wstring& fontName, int32 size, bool isKorean)
+	void IWin32GdiWindow::addFont(const std::wstring& fontName, int32 size, bool isKorean)
 	{
 		_vFonts.emplace_back(CreateFont(size, 0, 0, 0, 0, FALSE, FALSE, FALSE, (isKorean == true) ? HANGEUL_CHARSET : 0, 0, 0, 0, 0, fontName.c_str()));
 	}
 
-	void IGraphicalWindow::useFont(uint32 fontIndex)
+	void IWin32GdiWindow::useFont(uint32 fontIndex) const noexcept
 	{
 		assert(fontIndex < static_cast<uint32>(_vFonts.size()));
 		SelectObject(_backDc, _vFonts[fontIndex]);
 	}
 
-	uint32 IGraphicalWindow::createImageFromFile(const std::wstring& fileName)
+	uint32 IWin32GdiWindow::createImageFromFile(const std::wstring& fileName)
 	{
 		char fileNameA[MAX_PATH]{};
 		WideCharToMultiByte(CP_ACP, 0, fileName.c_str(), static_cast<int>(fileName.size()), fileNameA, MAX_PATH, 0, FALSE);
@@ -101,7 +101,7 @@ namespace fs
 		return static_cast<uint32>(_vImages.size() - 1);
 	}
 
-	uint32 IGraphicalWindow::createBlankImage(const Size2& size)
+	uint32 IWin32GdiWindow::createBlankImage(const Size2& size)
 	{
 		HBITMAP bitmap{ CreateCompatibleBitmap(_backDc, static_cast<int>(size.x), static_cast<int>(size.y)) };
 		_vImages.emplace_back(bitmap, size);
@@ -109,7 +109,7 @@ namespace fs
 		return static_cast<uint32>(_vImages.size() - 1);
 	}
 
-	bool IGraphicalWindow::update()
+	bool IWin32GdiWindow::update()
 	{
 		MSG msg{};
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE) == TRUE)
@@ -149,19 +149,19 @@ namespace fs
 		return true;
 	}
 
-	void IGraphicalWindow::beginRendering(const Color& clearColor)
+	void IWin32GdiWindow::beginRendering(const Color& clearColor) const noexcept
 	{
 		// 윈도우의 상하좌우를 얻어온다.
 		RECT windowRect{};
 		GetClientRect(_hWnd, &windowRect);
 
 		// _backDc를 clearColor로 클리어
-		HBRUSH brush{ CreateSolidBrush(RGB(clearColor.r, clearColor.g, clearColor.b)) };
+		HBRUSH brush{ CreateSolidBrush(RGB(clearColor.r * 255, clearColor.g * 255, clearColor.b * 255)) };
 		FillRect(_backDc, &windowRect, brush);
 		DeleteObject(brush);
 	}
 
-	void IGraphicalWindow::endRendering()
+	void IWin32GdiWindow::endRendering() const noexcept
 	{
 		// _backDc를 _frontDc로 복사
 		BitBlt(_frontDc, 0, 0, static_cast<int>(kWidth), static_cast<int>(kHeight), _backDc, 0, 0, SRCCOPY);
@@ -173,11 +173,11 @@ namespace fs
 		++_frameCount;
 	}
 
-	void IGraphicalWindow::drawRectangleToScreen(const Position2& position, const Size2& size, const Color& color, uint8 alpha)
+	void IWin32GdiWindow::drawRectangleToScreen(const Position2& position, const Size2& size, const Color& color, uint8 alpha) const noexcept
 	{
 		const LONG width{ static_cast<LONG>(size.x) };
 		const LONG height{ static_cast<LONG>(size.y) };
-		const HBRUSH brush{ CreateSolidBrush(RGB(color.r, color.g, color.b)) };
+		const HBRUSH brush{ CreateSolidBrush(RGB(color.r * 255, color.g * 255, color.b * 255)) };
 
 		if (alpha == 255)
 		{
@@ -214,13 +214,13 @@ namespace fs
 		DeleteObject(brush);
 	}
 
-	void IGraphicalWindow::drawRectangleToImage(uint32 imageIndex, const Position2& position, const Size2& size, const Color& color, uint8 alpha)
+	void IWin32GdiWindow::drawRectangleToImage(uint32 imageIndex, const Position2& position, const Size2& size, const Color& color, uint8 alpha)
 	{
 		assert(imageIndex < static_cast<uint32>(_vImages.size()));
 
 		const LONG width{ static_cast<LONG>(size.x) };
 		const LONG height{ static_cast<LONG>(size.y) };
-		const HBRUSH brush{ CreateSolidBrush(RGB(color.r, color.g, color.b)) };
+		const HBRUSH brush{ CreateSolidBrush(RGB(color.r * 255, color.g * 255, color.b * 255)) };
 
 		SelectObject(_tempDc, _vImages[imageIndex].bitmap);
 
@@ -261,7 +261,7 @@ namespace fs
 		DeleteObject(brush);
 	}
 
-	void IGraphicalWindow::drawImageToScreen(uint32 imageIndex, const Position2& position)
+	void IWin32GdiWindow::drawImageToScreen(uint32 imageIndex, const Position2& position) const noexcept
 	{
 		assert(imageIndex < static_cast<uint32>(_vImages.size()));
 		const auto& image{ _vImages[imageIndex] };
@@ -271,8 +271,8 @@ namespace fs
 			static_cast<int>(image.size.x), static_cast<int>(image.size.y),
 			_tempDc, 0, 0, SRCCOPY);
 	}
-
-	void IGraphicalWindow::drawImageAlphaToScreen(uint32 imageIndex, const Position2& position)
+	
+	void IWin32GdiWindow::drawImageAlphaToScreen(uint32 imageIndex, const Position2& position) const noexcept
 	{
 		assert(imageIndex < static_cast<uint32>(_vImages.size()));
 		const auto& image{ _vImages[imageIndex] };
@@ -283,7 +283,7 @@ namespace fs
 			_tempDc, 0, 0, static_cast<int>(image.size.x), static_cast<int>(image.size.y), 0);
 	}
 
-	void IGraphicalWindow::drawImageAlphaToScreen(uint32 imageIndex, const Position2& position, uint8 alpha)
+	void IWin32GdiWindow::drawImageAlphaToScreen(uint32 imageIndex, const Position2& position, uint8 alpha) const noexcept
 	{
 		assert(imageIndex < static_cast<uint32>(_vImages.size()));
 		const auto& image{ _vImages[imageIndex] };
@@ -299,7 +299,7 @@ namespace fs
 			_tempDc, 0, 0, static_cast<int>(image.size.x), static_cast<int>(image.size.y), blend);
 	}
 
-	void IGraphicalWindow::drawImagePrecomputedAlphaToScreen(uint32 imageIndex, const Position2& position)
+	void IWin32GdiWindow::drawImagePrecomputedAlphaToScreen(uint32 imageIndex, const Position2& position) const noexcept
 	{
 		assert(imageIndex < static_cast<uint32>(_vImages.size()));
 		const auto& image{ _vImages[imageIndex] };
@@ -315,17 +315,17 @@ namespace fs
 			_tempDc, 0, 0, static_cast<int>(image.size.x), static_cast<int>(image.size.y), blend);
 	}
 
-	void IGraphicalWindow::drawTextToScreen(const Position2& position, const std::wstring& content, const Color& color)
+	void IWin32GdiWindow::drawTextToScreen(const Position2& position, const std::wstring& content, const Color& color) const noexcept
 	{
 		RECT rect{};
 		rect.left = static_cast<LONG>(position.x);
 		rect.top = static_cast<LONG>(position.y);
-		SetTextColor(_backDc, RGB(color.r, color.g, color.b));
+		SetTextColor(_backDc, RGB(color.r * 255, color.g * 255, color.b * 255));
 		DrawTextW(_backDc, content.c_str(), static_cast<int>(content.size()), &rect, DT_LEFT | DT_TOP | DT_NOCLIP | DT_SINGLELINE);
 	}
 
-	void IGraphicalWindow::drawTextToScreen(const Position2& position, const Size2& area, const std::wstring& content, const Color& color,
-		EHorzAlign eHorzAlign, EVertAlign eVertAlign)
+	void IWin32GdiWindow::drawTextToScreen(const Position2& position, const Size2& area, const std::wstring& content, const Color& color,
+		EHorzAlign eHorzAlign, EVertAlign eVertAlign) const noexcept
 	{
 		UINT HorzAlign{ static_cast<UINT>((eHorzAlign == EHorzAlign::Left) ? DT_LEFT : (eHorzAlign == EHorzAlign::Center) ? DT_CENTER : DT_RIGHT) };
 		UINT VertAlign{ static_cast<UINT>((eVertAlign == EVertAlign::Top) ? DT_TOP : (eVertAlign == EVertAlign::Center) ? DT_VCENTER : DT_BOTTOM) };
@@ -335,13 +335,13 @@ namespace fs
 		rect.top = static_cast<LONG>(position.y);
 		rect.right = rect.left + static_cast<LONG>(area.x);
 		rect.bottom = rect.top + static_cast<LONG>(area.y);
-		SetTextColor(_backDc, RGB(color.r, color.g, color.b));
+		SetTextColor(_backDc, RGB(color.r * 255, color.g * 255, color.b * 255));
 		DrawTextW(_backDc, content.c_str(), static_cast<int>(content.size()), &rect, HorzAlign | VertAlign | DT_NOCLIP | DT_SINGLELINE);
 	}
 
-	void IGraphicalWindow::drawLineToScreen(const Position2& positionA, const Position2& positionB, const Color& color)
+	void IWin32GdiWindow::drawLineToScreen(const Position2& positionA, const Position2& positionB, const Color& color) const noexcept
 	{
-		const HPEN pen{ CreatePen(PS_SOLID, 1, RGB(color.r, color.g, color.b)) };
+		const HPEN pen{ CreatePen(PS_SOLID, 1, RGB(color.r * 255, color.g * 255, color.b * 255)) };
 		const HPEN prevPen{ (HPEN)SelectObject(_backDc, pen) };
 
 		POINT point{};
@@ -352,34 +352,34 @@ namespace fs
 		DeleteObject(pen);
 	}
 
-	void IGraphicalWindow::drawLineToScreenNormalized(const Position2& positionA, const Position2& positionB, const Color& color)
+	void IWin32GdiWindow::drawLineToScreenNormalized(const Position2& positionA, const Position2& positionB, const Color& color) const noexcept
 	{
 		Position2 positionAPixel{ +(positionA.x + 1.0f) * 0.5f * kWidth, -(positionA.y - 1.0f) * 0.5f * kHeight };
 		Position2 positionBPixel{ +(positionB.x + 1.0f) * 0.5f * kWidth, -(positionB.y - 1.0f) * 0.5f * kHeight };
 		drawLineToScreen(positionAPixel, positionBPixel, color);
 	}
 
-	uint32 IGraphicalWindow::getFps() const noexcept
+	uint32 IWin32GdiWindow::getFps() const noexcept
 	{
 		return _fps;
 	}
 
-	const std::wstring& IGraphicalWindow::getFpsWstring() const noexcept
+	const std::wstring& IWin32GdiWindow::getFpsWstring() const noexcept
 	{
 		return _fpsWstring;
 	}
 
-	float IGraphicalWindow::getWidth() const noexcept
+	float IWin32GdiWindow::getWidth() const noexcept
 	{
 		return kWidth;
 	}
 
-	float IGraphicalWindow::getHeight() const noexcept
+	float IWin32GdiWindow::getHeight() const noexcept
 	{
 		return kHeight;
 	}
 
-	bool IGraphicalWindow::tickInput() const noexcept
+	bool IWin32GdiWindow::tickInput() const noexcept
 	{
 		if (_bInputTick == true)
 		{
@@ -389,12 +389,17 @@ namespace fs
 		return false;
 	}
 
-	bool IGraphicalWindow::isKeyPressed(int keyCode) const noexcept
+	bool IWin32GdiWindow::isKeyPressed(int keyCode) const noexcept
 	{
-		return GetAsyncKeyState(VK_ESCAPE) == SHORT(0x8001);
+		return GetAsyncKeyState(keyCode) == SHORT(0x8001);
 	}
 
-	bool IGraphicalWindow::tickSecond() const noexcept
+	bool IWin32GdiWindow::isKeyDown(int keyCode) const noexcept
+	{
+		return (GetAsyncKeyState(keyCode) < 0);
+	}
+
+	bool IWin32GdiWindow::tickSecond() const noexcept
 	{
 		if (_bSecondTick == true)
 		{
@@ -404,7 +409,7 @@ namespace fs
 		return false;
 	}
 
-	void IGraphicalWindow::initialize()
+	void IWin32GdiWindow::initialize()
 	{
 		// 현재 윈도우의 기본 Device Context를 얻어온다.
 		_frontDc = GetDC(_hWnd);
@@ -435,7 +440,7 @@ namespace fs
 		_inputTimer.start();
 	}
 
-	void IGraphicalWindow::uninitialize()
+	void IWin32GdiWindow::uninitialize()
 	{
 		for (auto& image : _vImages)
 		{

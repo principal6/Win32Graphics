@@ -1,35 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="IGraphicalWindow.cpp">
+    <ClCompile Include="test.cpp" />
+    <ClCompile Include="..\Core\float4.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Util</Filter>
+    <ClCompile Include="..\Core\IWin32GdiWindow.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="test.cpp" />
-    <ClCompile Include="TestWindow.cpp" />
+    <ClCompile Include="..\Core\pch.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Utilities\Timer.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Line3DWindow.cpp" />
+    <ClCompile Include="..\Core\float4x4.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommonTypes.h">
+    <ClInclude Include="..\Core\_CommonTypes.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="IGraphicalWindow.h">
+    <ClInclude Include="..\Core\float4.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Util</Filter>
+    <ClInclude Include="..\Core\IWin32GdiWindow.h">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>Util</Filter>
+    <ClInclude Include="..\Core\pch.h">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="TestWindow.h" />
+    <ClInclude Include="..\Utilities\stb_image.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Utilities\Timer.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Line3DWindow.h" />
+    <ClInclude Include="..\Core\float4x4.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
       <UniqueIdentifier>{d5184b62-8ad6-4229-923b-bdf8297018f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Util">
+    <Filter Include="Utilities">
       <UniqueIdentifier>{3b2deec9-7ce7-4c56-a24a-2dd7f9cf7029}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
