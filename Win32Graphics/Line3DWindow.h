@@ -28,6 +28,8 @@ namespace fs
 		void translate(float x, float y, float z) noexcept;
 		void scale(float x, float y, float z) noexcept;
 		void rotateAroundXAxis(float angle) noexcept;
+		void rotateAroundYAxis(float angle) noexcept;
+		void rotateAroundZAxis(float angle) noexcept;
 
 	public:
 		void addLine(const float4& positionA, const float4& positionB, const Color& color) noexcept;

@@ -273,6 +273,13 @@ namespace fs
 	public:
 		static Float4			mul(const Float4x4& m, const Float4& v) noexcept;
 		static Float4x4			mul(const Float4x4& l, const Float4x4& r) noexcept;
+
+		static Float4x4			translationMatrix(float x, float y, float z) noexcept;
+		static Float4x4			scalingMatrix(float x, float y, float z) noexcept;
+		static Float4x4			rotationMatrixX(float angle) noexcept;
+		static Float4x4			rotationMatrixY(float angle) noexcept;
+		static Float4x4			rotationMatrixZ(float angle) noexcept;
+		static Float4x4			projectionMatrixPerspective(float Fov, float nearZ, float farZ, float ratio) noexcept;
 	};
 
 	// alias

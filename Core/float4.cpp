@@ -26,7 +26,6 @@ namespace fs
 
 	Float4::Float4(Float4&& b) noexcept
 	{
-		if (this == &b) return;
 		_data = std::move(b._data);
 	}
 
@@ -36,13 +35,20 @@ namespace fs
 
 	Float4& Float4::operator=(const Float4& b)
 	{
+		if (this == &b)
+		{
+			return *this;
+		}
 		_data = b._data;
 		return *this;
 	}
 
 	Float4& Float4::operator=(Float4&& b) noexcept
 	{
-		if (this == &b) return *this;
+		if (this == &b)
+		{
+			return *this;
+		}
 		_data = std::move(b._data);
 		return *this;
 	}

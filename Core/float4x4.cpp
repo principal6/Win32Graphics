@@ -255,4 +255,75 @@ namespace fs
 			Float4::dot(l._row[3], rCol[0]), Float4::dot(l._row[3], rCol[1]), Float4::dot(l._row[3], rCol[2]), Float4::dot(l._row[3], rCol[3])
 		);
 	}
+
+	Float4x4 Float4x4::translationMatrix(float x, float y, float z) noexcept
+	{
+		return Float4x4
+		(
+			1, 0, 0, x,
+			0, 1, 0, y,
+			0, 0, 1, z,
+			0, 0, 0, 1
+		);
+	}
+
+	Float4x4 Float4x4::scalingMatrix(float x, float y, float z) noexcept
+	{
+		return Float4x4
+		(
+			x, 0, 0, 0,
+			0, y, 0, 0,
+			0, 0, z, 0,
+			0, 0, 0, 1
+		);
+	}
+	
+	Float4x4 Float4x4::rotationMatrixX(float angle) noexcept
+	{
+		return Float4x4
+		(
+			1	, 0				, 0				, 0,
+			0	, +cosf(angle)	, -sinf(angle)	, 0,
+			0	, +sinf(angle)	, +cosf(angle)	, 0,
+			0	, 0				, 0				, 1
+		);
+	}
+
+	Float4x4 Float4x4::rotationMatrixY(float angle) noexcept
+	{
+		return Float4x4
+		(
+			+cosf(angle)	, 0	, +sinf(angle)	, 0,
+			0				, 1	, 0				, 0,
+			-sinf(angle)	, 0	, +cosf(angle)	, 0,
+			0				, 0	, 0				, 1
+		);
+	}
+
+	Float4x4 Float4x4::rotationMatrixZ(float angle) noexcept
+	{
+		return Float4x4
+		(
+			+cosf(angle)	, -sinf(angle)	, 0	, 0,
+			+sinf(angle)	, +cosf(angle)	, 0	, 0,
+			0				, 0				, 1	, 0,
+			0				, 0				, 0	, 1
+		);
+	}
+	Float4x4 Float4x4::projectionMatrixPerspective(float Fov, float nearZ, float farZ, float ratio) noexcept
+	{
+		float a = 1.0f / (tanf(Fov) * ratio);
+		float b = 1.0f / (tanf(Fov));
+		float c = (-farZ) / (farZ - nearZ);
+		float d = (nearZ * farZ) / (farZ - nearZ);
+		float e = -1.0f;
+
+		return Float4x4
+		(
+			a, 0, 0, 0,
+			0, b, 0, 0,
+			0, 0, c, d,
+			0, 0, e, 0
+		);
+	}
 }
