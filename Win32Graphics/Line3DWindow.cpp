@@ -47,6 +47,11 @@ namespace fs
 		_rotationMatrix = float4x4::rotationMatrixZ(angle) * _rotationMatrix;
 	}
 
+	void Line3DWindow::rotateAxisAngle(const float4& axis, float angle) noexcept
+	{
+		_rotationMatrix = float4x4::rotationMatrixAxisAngle(axis, angle) * _rotationMatrix;
+	}
+
 	void Line3DWindow::addLine(const float4& positionA, const float4& positionB, const Color& color) noexcept
 	{
 		_vVertices.emplace_back(positionA);

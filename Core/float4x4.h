@@ -279,6 +279,7 @@ namespace fs
 		static Float4x4			rotationMatrixX(float angle) noexcept;
 		static Float4x4			rotationMatrixY(float angle) noexcept;
 		static Float4x4			rotationMatrixZ(float angle) noexcept;
+		static Float4x4			rotationMatrixAxisAngle(const Float4& axis, float angle) noexcept;
 		static Float4x4			projectionMatrixPerspective(float Fov, float nearZ, float farZ, float ratio) noexcept;
 	};
 

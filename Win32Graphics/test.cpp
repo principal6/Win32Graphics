@@ -55,12 +55,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			if (g_Line3DWindow.isKeyDown(VK_RIGHT) == true)
 			{
-				g_Line3DWindow.rotateAroundYAxis(+0.05f);
+				g_Line3DWindow.rotateAxisAngle(float4(1, 2, -1, 0), +0.05f);
 			}
 
 			if (g_Line3DWindow.isKeyDown(VK_LEFT) == true)
 			{
-				g_Line3DWindow.rotateAroundYAxis(-0.05f);
+				g_Line3DWindow.rotateAxisAngle(float4(1, 2, -1, 0), -0.05f);
 			}
 		}
 		

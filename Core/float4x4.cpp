@@ -310,6 +310,27 @@ namespace fs
 			0				, 0				, 0	, 1
 		);
 	}
+	Float4x4 Float4x4::rotationMatrixAxisAngle(const Float4& axis, float angle) noexcept
+	{
+		// Rodrigues' rotation formula
+		// (v * r)r(1 - cosθ) + vcosθ + (r X v)sinθ
+
+		const Float4 r = Float4::normalize(Float4(axis.getX(), axis.getY(), axis.getZ(), 0));
+		const float c = cosf(angle);
+		const float s = sinf(angle);
+
+		const float rx = r.getX();
+		const float ry = r.getY();
+		const float rz = r.getZ();
+		Float4x4 result
+		(
+			(1 - c) * rx * rx  + c            , (1 - c) * ry * rx       - (rz * s), (1 - c) * rz * rx       + (ry * s), 0,
+			(1 - c) * rx * ry       + (rz * s), (1 - c) * ry * ry  + c            , (1 - c) * rz * ry       - (rx * s), 0,
+			(1 - c) * rx * rz       - (ry * s), (1 - c) * ry * rz       + (rx * s), (1 - c) * rz * rz  + c            , 0,
+			0                                 , 0                                 , 0                                 , 1
+		);
+		return result;
+	}
 	Float4x4 Float4x4::projectionMatrixPerspective(float Fov, float nearZ, float farZ, float ratio) noexcept
 	{
 		float a = 1.0f / (tanf(Fov) * ratio);

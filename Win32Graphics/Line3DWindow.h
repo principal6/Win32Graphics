@@ -30,6 +30,7 @@ namespace fs
 		void rotateAroundXAxis(float angle) noexcept;
 		void rotateAroundYAxis(float angle) noexcept;
 		void rotateAroundZAxis(float angle) noexcept;
+		void rotateAxisAngle(const float4& axis, float angle) noexcept;
 
 	public:
 		void addLine(const float4& positionA, const float4& positionB, const Color& color) noexcept;
