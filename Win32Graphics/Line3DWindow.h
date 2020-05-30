@@ -37,6 +37,9 @@ namespace fs
 		void drawLines() const noexcept;
 
 	private:
+		float4				_rotationAxis;
+		float				_rotationAngle;
+
 		float4x4			_projectionMatrix;
 		float4x4			_translationMatrix;
 		float4x4			_rotationMatrix;

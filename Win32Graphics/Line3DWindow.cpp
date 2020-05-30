@@ -5,7 +5,8 @@ namespace fs
 {
 	Line3DWindow::Line3DWindow(float width, float height) : IWin32GdiWindow(width, height)
 	{
-		__noop;
+		_rotationAxis = float4(1, 0, 0, 0);
+		_rotationAngle = 0;
 	}
 
 	Line3DWindow::~Line3DWindow()
@@ -49,7 +50,10 @@ namespace fs
 
 	void Line3DWindow::rotateAxisAngle(const float4& axis, float angle) noexcept
 	{
-		_rotationMatrix = float4x4::rotationMatrixAxisAngle(axis, angle) * _rotationMatrix;
+		_rotationAxis = axis;
+		_rotationAngle += angle;
+
+		_rotationMatrix = float4x4::rotationMatrixAxisAngle(_rotationAxis, _rotationAngle);
 	}
 
 	void Line3DWindow::addLine(const float4& positionA, const float4& positionB, const Color& color) noexcept
@@ -69,9 +73,23 @@ namespace fs
 				float4 vertexB{ _vVertices[static_cast<uint64>(i) * 2 + 1] };
 
 				// SRT world
-				const float4x4 worldMatrix = _translationMatrix * _rotationMatrix * _scalingMatrix;
-				vertexA = worldMatrix * vertexA;
-				vertexB = worldMatrix * vertexB;
+				//const float4x4 worldMatrix = _translationMatrix * _rotationMatrix * _scalingMatrix;
+				//vertexA = worldMatrix * vertexA;
+				//vertexB = worldMatrix * vertexB;
+
+
+				// SRT with Quaternion
+				vertexA = _scalingMatrix * vertexA;
+				vertexB = _scalingMatrix * vertexB;
+
+				const quaternion q = quaternion::rotationQuaternion(_rotationAxis, _rotationAngle);
+				const quaternion qReciprocal = q.reciprocal();
+				vertexA = quaternion(q * vertexA.asQuaternion() * qReciprocal).asFloat4();
+				vertexB = quaternion(q * vertexB.asQuaternion() * qReciprocal).asFloat4();
+
+				vertexA = _translationMatrix * vertexA;
+				vertexB = _translationMatrix * vertexB;
+
 
 				// behind the eye
 				if (vertexA.getZ() > 0 && vertexB.getZ() > 0) continue;

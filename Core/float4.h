@@ -12,9 +12,12 @@
 
 namespace fs
 {
+	class Float4;
+	class Quaternion;
+
 	// SSE
 	// private fields
-	class Float4
+	class Float4 final
 	{
 	public:
 		explicit				Float4();
@@ -74,6 +77,9 @@ namespace fs
 		float					getZ() const noexcept;
 		float					getW() const noexcept;
 
+	public:
+		Quaternion				asQuaternion() const noexcept;
+
 	private:
 		__m128					_data;
 
@@ -88,6 +94,48 @@ namespace fs
 
 	// alias
 	using float4				= Float4;
+
+
+	// q == a + bi + cj + dk
+	class Quaternion final
+	{
+	public:
+								Quaternion();
+								Quaternion(float a, float b, float c, float d);
+								Quaternion(const Quaternion& q);
+								Quaternion(const Float4& v);
+								~Quaternion();
+
+	public:
+		// Hamilton product
+		Quaternion				operator*(const Quaternion& q) const noexcept;
+
+	public:
+		Float4					asFloat4() const noexcept;
+
+		Quaternion				reciprocal() const noexcept;
+
+	// static functions
+	private:
+		// q*
+		static Quaternion		conjugate(const Quaternion& q) noexcept;
+
+		// ||q||
+		static float			norm(const Quaternion& q) noexcept;
+
+	// static functions
+	public:
+		static Quaternion		rotationQuaternion(const Float4& axis, float angle) noexcept;
+
+		// q^(-1)
+		static Quaternion		reciprocal(const Quaternion& q) noexcept;
+
+	private:
+		Float4					_data;
+	};
+
+	// alias
+	using quaternion = Quaternion;
 }
 
 

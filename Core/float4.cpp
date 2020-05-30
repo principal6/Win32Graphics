@@ -179,6 +179,11 @@ namespace fs
 		return _data.m128_f32[3];
 	}
 
+	Quaternion Float4::asQuaternion() const noexcept
+	{
+		return Quaternion(0, getX(), getY(), getZ());
+	}
+
 	float Float4::dot(const Float4& a, const Float4& b) noexcept
 	{
 		__m128 result{ _mm_mul_ps(a._data, b._data) };
@@ -206,5 +211,93 @@ namespace fs
 	{
 		float length{ Float4::length(a) };
 		return (a / length);
+	}
+
+
+	Quaternion::Quaternion()
+	{
+		__noop;
+	}
+
+	Quaternion::Quaternion(float a, float b, float c, float d) : _data{ a, b, c, d }
+	{
+		__noop;
+	}
+
+	Quaternion::Quaternion(const Quaternion& q) : _data{ q._data }
+	{
+		__noop;
+	}
+
+	Quaternion::Quaternion(const Float4& v) : _data{ v }
+	{
+		__noop;
+	}
+
+	Quaternion::~Quaternion()
+	{
+		__noop;
+	}
+
+	Quaternion Quaternion::operator*(const Quaternion& q) const noexcept
+	{
+		const float a1 = _data.getX();
+		const float b1 = _data.getY();
+		const float c1 = _data.getZ();
+		const float d1 = _data.getW();
+
+		const float a2 = q._data.getX();
+		const float b2 = q._data.getY();
+		const float c2 = q._data.getZ();
+		const float d2 = q._data.getW();
+
+		return Quaternion
+		(
+			+ a1 * a2 - b1 * b2 - c1 * c2 - d1 * d2,
+			+ a1 * b2 + b1 * a2 + c1 * d2 - d1 * c2, // i
+			+ a1 * c2 - b1 * d2 + c1 * a2 + d1 * b2, // j
+			+ a1 * d2 + b1 * c2 - c1 * b2 + d1 * a2  // k
+		);
+	}
+
+	Float4 Quaternion::asFloat4() const noexcept
+	{
+		return Float4(_data.getY(), _data.getZ(), _data.getW(), 1);
+	}
+
+	Quaternion Quaternion::reciprocal() const noexcept
+	{
+		return Quaternion::reciprocal(*this);
+	}
+
+	Quaternion Quaternion::conjugate(const Quaternion& q) noexcept
+	{
+		const float a = q._data.getX();
+		const float b = q._data.getY();
+		const float c = q._data.getZ();
+		const float d = q._data.getW();
+
+		return Quaternion(a, -b, -c, -d);
+	}
+
+	float Quaternion::norm(const Quaternion& q) noexcept
+	{
+		return Float4::length(q._data);
+	}
+
+	Quaternion Quaternion::reciprocal(const Quaternion& q) noexcept
+	{
+		const Quaternion conjugate = Quaternion::conjugate(q);
+		const float norm = Quaternion::norm(q);
+		return Quaternion(conjugate._data / (norm * norm));
+	}
+
+	Quaternion Quaternion::rotationQuaternion(const Float4& axis, float angle) noexcept
+	{
+		const Float4 r = Float4::normalize(axis);
+		const float half_angle = angle * 0.5f;
+		const float cos_half = cosf(half_angle);
+		const float sin_half = sinf(half_angle);
+		return Quaternion(cos_half, sin_half * r.getX(), sin_half * r.getY(), sin_half * r.getZ());
 	}
 }
