@@ -14,10 +14,10 @@ namespace fs
 		float m20, float m21, float m22, float m23,
 		float m30, float m31, float m32, float m33) : 
 		_row{ 
-				{ m00, m01, m02, m03 },
-				{ m10, m11, m12, m13 }, 
-				{ m20, m21, m22, m23 }, 
-				{ m30 ,m31, m32, m33 } 
+				Float4( m00, m01, m02, m03 ),
+				Float4( m10, m11, m12, m13 ), 
+				Float4( m20, m21, m22, m23 ), 
+				Float4( m30 ,m31, m32, m33 ) 
 			}
 	{
 		__noop;
@@ -215,10 +215,10 @@ namespace fs
 	Float4x4 Float4x4::mul(const Float4x4& m) const noexcept
 	{
 		Float4 col[4]{
-			{ m._row[0].getX(), m._row[1].getX(), m._row[2].getX(), m._row[3].getX() },
-			{ m._row[0].getY(), m._row[1].getY(), m._row[2].getY(), m._row[3].getY() },
-			{ m._row[0].getZ(), m._row[1].getZ(), m._row[2].getZ(), m._row[3].getZ() },
-			{ m._row[0].getW(), m._row[1].getW(), m._row[2].getW(), m._row[3].getW() },
+			Float4( m._row[0].getX(), m._row[1].getX(), m._row[2].getX(), m._row[3].getX() ),
+			Float4( m._row[0].getY(), m._row[1].getY(), m._row[2].getY(), m._row[3].getY() ),
+			Float4( m._row[0].getZ(), m._row[1].getZ(), m._row[2].getZ(), m._row[3].getZ() ),
+			Float4( m._row[0].getW(), m._row[1].getW(), m._row[2].getW(), m._row[3].getW() ),
 		};
 
 		return Float4x4(
@@ -242,10 +242,10 @@ namespace fs
 	Float4x4 Float4x4::mul(const Float4x4& l, const Float4x4& r) noexcept
 	{
 		Float4 rCol[4]{
-			{ r._row[0].getX(), r._row[1].getX(), r._row[2].getX(), r._row[3].getX() },
-			{ r._row[0].getY(), r._row[1].getY(), r._row[2].getY(), r._row[3].getY() },
-			{ r._row[0].getZ(), r._row[1].getZ(), r._row[2].getZ(), r._row[3].getZ() },
-			{ r._row[0].getW(), r._row[1].getW(), r._row[2].getW(), r._row[3].getW() },
+			Float4( r._row[0].getX(), r._row[1].getX(), r._row[2].getX(), r._row[3].getX() ),
+			Float4( r._row[0].getY(), r._row[1].getY(), r._row[2].getY(), r._row[3].getY() ),
+			Float4( r._row[0].getZ(), r._row[1].getZ(), r._row[2].getZ(), r._row[3].getZ() ),
+			Float4( r._row[0].getW(), r._row[1].getW(), r._row[2].getW(), r._row[3].getW() ),
 		};
 
 		return Float4x4(

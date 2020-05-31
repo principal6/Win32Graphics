@@ -21,8 +21,8 @@ namespace fs
 	{
 	public:
 		explicit				Float4();
-								Float4(float x, float y, float z, float w);
-								Float4(const __m128& m);
+		explicit				Float4(float x, float y, float z, float w);
+		explicit				Float4(const __m128& m);
 								Float4(const Float4& b);
 								Float4(Float4&& b) noexcept;
 								~Float4();
@@ -100,10 +100,10 @@ namespace fs
 	class Quaternion final
 	{
 	public:
-								Quaternion();
-								Quaternion(float a, float b, float c, float d);
+		explicit				Quaternion();
+		explicit				Quaternion(float a, float b, float c, float d);
+		explicit				Quaternion(const Float4& v);
 								Quaternion(const Quaternion& q);
-								Quaternion(const Float4& v);
 								~Quaternion();
 
 	public:
@@ -114,6 +114,12 @@ namespace fs
 		Float4					asFloat4() const noexcept;
 
 		Quaternion				reciprocal() const noexcept;
+
+	private:
+		float					getA() const noexcept;
+		float					getB() const noexcept;
+		float					getC() const noexcept;
+		float					getD() const noexcept;
 
 	// static functions
 	private:

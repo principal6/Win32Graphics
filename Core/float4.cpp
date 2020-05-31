@@ -91,42 +91,42 @@ namespace fs
 
 	Float4 Float4::operator+(const Float4& b) const
 	{
-		return _mm_add_ps(_data, b._data);
+		return Float4(_mm_add_ps(_data, b._data));
 	}
 
 	Float4 Float4::operator-(const Float4& b) const
 	{
-		return _mm_sub_ps(_data, b._data);
+		return Float4(_mm_sub_ps(_data, b._data));
 	}
 
 	Float4 Float4::operator*(const Float4& b) const
 	{
-		return _mm_mul_ps(_data, b._data);
+		return Float4(_mm_mul_ps(_data, b._data));
 	}
 
 	Float4 Float4::operator/(const Float4& b) const
 	{
-		return _mm_div_ps(_data, b._data);
+		return Float4(_mm_div_ps(_data, b._data));
 	}
 
 	Float4 Float4::operator*(float s) const
 	{
-		return _mm_mul_ps(_data, _mm_set_ps(s, s, s, s));
+		return Float4(_mm_mul_ps(_data, _mm_set_ps(s, s, s, s)));
 	}
 
 	Float4 Float4::operator/(float s) const
 	{
-		return _mm_div_ps(_data, _mm_set_ps(s, s, s, s));
+		return Float4(_mm_div_ps(_data, _mm_set_ps(s, s, s, s)));
 	}
 
 	Float4 Float4::operator==(const Float4& b) const noexcept
 	{
-		return _mm_cmpeq_ps(_data, b._data);
+		return Float4(_mm_cmpeq_ps(_data, b._data));
 	}
 
 	Float4 Float4::operator!=(const Float4& b) const noexcept
 	{
-		return _mm_cmpneq_ps(_data, b._data);
+		return Float4(_mm_cmpneq_ps(_data, b._data));
 	}
 
 	void Float4::set(float x, float y, float z, float w)
@@ -199,7 +199,7 @@ namespace fs
 			a.getX() * b.getY() - a.getY() * b.getX(),
 			0,
 		};
-		return result;
+		return Float4(result);
 	}
 
 	float Float4::length(const Float4& a) noexcept
@@ -241,15 +241,15 @@ namespace fs
 
 	Quaternion Quaternion::operator*(const Quaternion& q) const noexcept
 	{
-		const float a1 = _data.getX();
-		const float b1 = _data.getY();
-		const float c1 = _data.getZ();
-		const float d1 = _data.getW();
+		const float a1 = this->getA();
+		const float b1 = this->getB();
+		const float c1 = this->getC();
+		const float d1 = this->getD();
 
-		const float a2 = q._data.getX();
-		const float b2 = q._data.getY();
-		const float c2 = q._data.getZ();
-		const float d2 = q._data.getW();
+		const float a2 = q.getA();
+		const float b2 = q.getB();
+		const float c2 = q.getC();
+		const float d2 = q.getD();
 
 		return Quaternion
 		(
@@ -262,7 +262,7 @@ namespace fs
 
 	Float4 Quaternion::asFloat4() const noexcept
 	{
-		return Float4(_data.getY(), _data.getZ(), _data.getW(), 1);
+		return Float4(getB(), getC(), getD(), 1);
 	}
 
 	Quaternion Quaternion::reciprocal() const noexcept
@@ -270,12 +270,32 @@ namespace fs
 		return Quaternion::reciprocal(*this);
 	}
 
+	float Quaternion::getA() const noexcept
+	{
+		return _data.getX();
+	}
+
+	float Quaternion::getB() const noexcept
+	{
+		return _data.getY();
+	}
+
+	float Quaternion::getC() const noexcept
+	{
+		return _data.getZ();
+	}
+
+	float Quaternion::getD() const noexcept
+	{
+		return _data.getW();
+	}
+
 	Quaternion Quaternion::conjugate(const Quaternion& q) noexcept
 	{
-		const float a = q._data.getX();
-		const float b = q._data.getY();
-		const float c = q._data.getZ();
-		const float d = q._data.getW();
+		const float a = q.getA();
+		const float b = q.getB();
+		const float c = q.getC();
+		const float d = q.getD();
 
 		return Quaternion(a, -b, -c, -d);
 	}
