@@ -23,6 +23,8 @@ namespace fs
 		explicit				Float4();
 		explicit				Float4(float x, float y, float z, float w);
 		explicit				Float4(const __m128& m);
+		// converts Quaternion to Float4
+		explicit				Float4(const Quaternion& q);
 								Float4(const Float4& b);
 								Float4(Float4&& b) noexcept;
 								~Float4();
@@ -77,12 +79,8 @@ namespace fs
 		float					getZ() const noexcept;
 		float					getW() const noexcept;
 
-	public:
-		Quaternion				asQuaternion() const noexcept;
-
 	private:
 		__m128					_data;
-
 
 	// static functions
 	public:
@@ -99,9 +97,12 @@ namespace fs
 	// q == a + bi + cj + dk
 	class Quaternion final
 	{
+		friend class Float4;
+
 	public:
 		explicit				Quaternion();
 		explicit				Quaternion(float a, float b, float c, float d);
+		// converts Float4 to Quaternion
 		explicit				Quaternion(const Float4& v);
 								Quaternion(const Quaternion& q);
 								~Quaternion();
@@ -110,9 +111,9 @@ namespace fs
 		// Hamilton product
 		Quaternion				operator*(const Quaternion& q) const noexcept;
 
-	public:
-		Float4					asFloat4() const noexcept;
+		Quaternion				operator/(float s) const noexcept;
 
+	public:
 		Quaternion				reciprocal() const noexcept;
 
 	private:

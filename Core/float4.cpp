@@ -19,6 +19,11 @@ namespace fs
 		_data = m;
 	}
 
+	Float4::Float4(const Quaternion& q) : Float4(q.getB(), q.getC(), q.getD(), 1)
+	{
+		__noop;
+	}
+
 	Float4::Float4(const Float4& b)
 	{
 		_data = b._data;
@@ -179,11 +184,6 @@ namespace fs
 		return _data.m128_f32[3];
 	}
 
-	Quaternion Float4::asQuaternion() const noexcept
-	{
-		return Quaternion(0, getX(), getY(), getZ());
-	}
-
 	float Float4::dot(const Float4& a, const Float4& b) noexcept
 	{
 		__m128 result{ _mm_mul_ps(a._data, b._data) };
@@ -229,7 +229,7 @@ namespace fs
 		__noop;
 	}
 
-	Quaternion::Quaternion(const Float4& v) : _data{ v }
+	Quaternion::Quaternion(const Float4& v) : _data{ 0, v.getX(), v.getY(), v.getZ() }
 	{
 		__noop;
 	}
@@ -260,9 +260,9 @@ namespace fs
 		);
 	}
 
-	Float4 Quaternion::asFloat4() const noexcept
+	Quaternion Quaternion::operator/(float s) const noexcept
 	{
-		return Float4(getB(), getC(), getD(), 1);
+		return Quaternion(getA() / s, getB() / s, getC() / s, getD() / s);
 	}
 
 	Quaternion Quaternion::reciprocal() const noexcept
@@ -309,7 +309,7 @@ namespace fs
 	{
 		const Quaternion conjugate = Quaternion::conjugate(q);
 		const float norm = Quaternion::norm(q);
-		return Quaternion(conjugate._data / (norm * norm));
+		return Quaternion(conjugate / (norm * norm));
 	}
 
 	Quaternion Quaternion::rotationQuaternion(const Float4& axis, float angle) noexcept

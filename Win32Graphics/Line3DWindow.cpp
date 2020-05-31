@@ -84,8 +84,8 @@ namespace fs
 
 				const quaternion q = quaternion::rotationQuaternion(_rotationAxis, _rotationAngle);
 				const quaternion qReciprocal = q.reciprocal();
-				vertexA = quaternion(q * vertexA.asQuaternion() * qReciprocal).asFloat4();
-				vertexB = quaternion(q * vertexB.asQuaternion() * qReciprocal).asFloat4();
+				vertexA = float4(q * quaternion(vertexA) * qReciprocal);
+				vertexB = float4(q * quaternion(vertexB) * qReciprocal);
 
 				vertexA = _translationMatrix * vertexA;
 				vertexB = _translationMatrix * vertexB;
