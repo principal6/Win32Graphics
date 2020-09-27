@@ -219,17 +219,12 @@ namespace fs
 		__noop;
 	}
 
-	Quaternion::Quaternion(float a, float b, float c, float d) : _data{ a, b, c, d }
+	Quaternion::Quaternion(const float a, const float b, const float c, const float d) : _data{ b, c, d, a }
 	{
 		__noop;
 	}
 
-	Quaternion::Quaternion(const Quaternion& q) : _data{ q._data }
-	{
-		__noop;
-	}
-
-	Quaternion::Quaternion(const Float4& v) : _data{ 0, v.getX(), v.getY(), v.getZ() }
+	Quaternion::Quaternion(const Float4& v) : _data{ v.getX(), v.getY(), v.getZ(), 0 }
 	{
 		__noop;
 	}
@@ -241,10 +236,10 @@ namespace fs
 
 	Quaternion Quaternion::operator*(const Quaternion& q) const noexcept
 	{
-		const float a1 = this->getA();
-		const float b1 = this->getB();
-		const float c1 = this->getC();
-		const float d1 = this->getD();
+		const float a1 = getA();
+		const float b1 = getB();
+		const float c1 = getC();
+		const float d1 = getD();
 
 		const float a2 = q.getA();
 		const float b2 = q.getB();
@@ -260,7 +255,7 @@ namespace fs
 		);
 	}
 
-	Quaternion Quaternion::operator/(float s) const noexcept
+	Quaternion Quaternion::operator/(const float s) const noexcept
 	{
 		return Quaternion(getA() / s, getB() / s, getC() / s, getD() / s);
 	}
@@ -272,22 +267,22 @@ namespace fs
 
 	float Quaternion::getA() const noexcept
 	{
-		return _data.getX();
+		return _data.getW();
 	}
 
 	float Quaternion::getB() const noexcept
 	{
-		return _data.getY();
+		return _data.getX();
 	}
 
 	float Quaternion::getC() const noexcept
 	{
-		return _data.getZ();
+		return _data.getY();
 	}
 
 	float Quaternion::getD() const noexcept
 	{
-		return _data.getW();
+		return _data.getZ();
 	}
 
 	Quaternion Quaternion::conjugate(const Quaternion& q) noexcept
@@ -296,7 +291,6 @@ namespace fs
 		const float b = q.getB();
 		const float c = q.getC();
 		const float d = q.getD();
-
 		return Quaternion(a, -b, -c, -d);
 	}
 
@@ -307,17 +301,17 @@ namespace fs
 
 	Quaternion Quaternion::reciprocal(const Quaternion& q) noexcept
 	{
-		const Quaternion conjugate = Quaternion::conjugate(q);
-		const float norm = Quaternion::norm(q);
+		const Quaternion	conjugate	= Quaternion::conjugate(q);
+		const float			norm		= Quaternion::norm(q);
 		return Quaternion(conjugate / (norm * norm));
 	}
 
 	Quaternion Quaternion::rotationQuaternion(const Float4& axis, float angle) noexcept
 	{
-		const Float4 r = Float4::normalize(axis);
-		const float half_angle = angle * 0.5f;
-		const float cos_half = cosf(half_angle);
-		const float sin_half = sinf(half_angle);
-		return Quaternion(cos_half, sin_half * r.getX(), sin_half * r.getY(), sin_half * r.getZ());
+		const Float4	r			= Float4::normalize(axis);
+		const float		half_angle	= angle * 0.5f;
+		const float		cos_half	= cosf(half_angle);
+		const float		sin_half	= sinf(half_angle);
+		return Quaternion(sin_half * r.getX(), sin_half * r.getY(), sin_half * r.getZ(), cos_half);
 	}
 }

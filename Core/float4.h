@@ -95,23 +95,24 @@ namespace fs
 
 
 	// q == a + bi + cj + dk
+	//      w    x    y    z (Float4)
 	class Quaternion final
 	{
 		friend class Float4;
 
 	public:
 		explicit				Quaternion();
-		explicit				Quaternion(float a, float b, float c, float d);
+		explicit				Quaternion(const float a, const float b, const float c, const float d);
 		// converts Float4 to Quaternion
 		explicit				Quaternion(const Float4& v);
-								Quaternion(const Quaternion& q);
+								Quaternion(const Quaternion& q)	= default;
+								Quaternion(Quaternion&& q)		= default;
 								~Quaternion();
 
 	public:
 		// Hamilton product
 		Quaternion				operator*(const Quaternion& q) const noexcept;
-
-		Quaternion				operator/(float s) const noexcept;
+		Quaternion				operator/(const float s) const noexcept;
 
 	public:
 		Quaternion				reciprocal() const noexcept;
